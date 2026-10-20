@@ -5,3 +5,4 @@
 - `index.html` — сторінка, ціни, форма заявки.
 - `privacy.html` — політика конфіденційності.
 - `demo-zayavka.mp4`, `demo-poster.jpg` — відео-демо форми заявки.
+- `slukhavka-promo-16x9.mp4`, `slukhavka-promo-9x16.mp4`, `promo-poster-*.jpg` — промо-ролик 50 с (на вузьких екранах — вертикальна версія).
