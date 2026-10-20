@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Слухавка — жоден дзвінок і заявка не губляться</title>
+<meta name="description" content="Голосовий помічник бере слухавку, коли ви зайняті, і одразу пише вам у Telegram. Заявки з сайту отримують відповідь за 1–2 секунди. 7 днів безкоштовно.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23163a5f'/%3E%3Cpath d='M10 8c1 0 2 2 3 4s-1 3-1 3 1 3 5 5c0 0 1-2 3-1s4 2 4 3-2 4-4 4C14 26 6 18 6 12c0-2 3-4 4-4z' fill='%2337c47a'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Manrope:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f6f3ec; --card:#ffffff; --ink:#14273d; --ink-2:#3d5068; --muted:#6c7a8b; --line:#e2ddd2;
+  --navy:#163a5f; --green:#1f9d5c; --green-soft:#e3f5ea; --red:#c9472f; --red-soft:#fbe9e4; --sun:#f2b632;
+  --radius:18px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 17px/1.6 Manrope,system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
+.wrap{max-width:1080px;margin:0 auto;padding-inline:20px}
+h1,h2,h3{font-family:Unbounded,Manrope,system-ui,sans-serif;font-weight:700;letter-spacing:-.02em;line-height:1.15;text-wrap:balance;margin:0}
+h1{font-size:clamp(1.9rem,5.2vw,3.3rem)}
+h2{font-size:clamp(1.45rem,3.4vw,2.1rem)}
+h3{font-size:1.08rem;font-weight:500}
+p{margin:0;color:var(--ink-2)}
+a{color:var(--navy)}
+.eyebrow{font-size:.78rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+section{padding-block:56px}
+.lead{font-size:1.12rem;max-width:58ch}
+
+/* шапка */
+header{padding-block:18px}
+header .wrap{display:flex;align-items:center;gap:12px}
+.logo{display:flex;align-items:center;gap:10px;font-family:Unbounded,sans-serif;font-weight:700;font-size:1.15rem;color:var(--ink);text-decoration:none}
+.logo svg{width:34px;height:34px;flex:none}
+header .cta-mini{margin-left:auto;font-weight:800;font-size:.9rem;color:var(--navy);text-decoration:none;border:2px solid var(--navy);border-radius:999px;padding:8px 16px;white-space:nowrap}
+
+/* первый экран */
+.hero{padding-top:28px}
+.hero .wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:44px;align-items:center}
+.hero-text{display:grid;gap:20px;min-width:0}
+.btns{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.btn{display:inline-block;background:var(--green);color:#fff;font-weight:800;text-decoration:none;border-radius:999px;padding:15px 26px;box-shadow:0 5px 0 #157443;border:0;font:inherit;font-weight:800;cursor:pointer}
+.btn:active{transform:translateY(2px);box-shadow:0 3px 0 #157443}
+.note{font-size:.92rem;color:var(--muted)}
+
+/* макет: журнал дзвінків → Telegram */
+.mock{display:grid;gap:14px;min-width:0}
+.calllog,.tg{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;box-shadow:0 10px 30px rgba(20,39,61,.07)}
+.calllog .t{font-size:.78rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.row{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-top:1px solid var(--line);font-variant-numeric:tabular-nums;font-size:.95rem}
+.row:first-of-type{border-top:0}
+.row .who{display:flex;gap:8px;align-items:center;min-width:0}
+.row .who span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row>span:last-child{white-space:nowrap}
+.miss{color:var(--red);font-weight:800}
+.ok{color:var(--green);font-weight:800}
+.arrow{justify-self:center;font-size:.85rem;font-weight:800;color:var(--muted);display:flex;align-items:center;gap:8px}
+.arrow::before,.arrow::after{content:"";width:34px;height:2px;background:var(--line)}
+.tg{border-left:5px solid #2aabee}
+.tg .head{display:flex;justify-content:space-between;font-size:.82rem;color:var(--muted);margin-bottom:6px}
+.tg .head b{color:#2a8bc8}
+.tg p{color:var(--ink);font-size:.98rem}
+.tg .meta{margin-top:8px;font-size:.85rem;color:var(--muted)}
+
+/* боль */
+.pain{background:var(--card);border-block:1px solid var(--line)}
+.pain .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:28px}
+.pain .grid div{display:grid;gap:8px;align-content:start;min-width:0}
+.big{font-family:Unbounded,sans-serif;font-weight:700;font-size:2.2rem;color:var(--navy);font-variant-numeric:tabular-nums}
+.src{font-size:.8rem;color:var(--muted);margin-top:18px}
+
+/* как работает */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:28px;counter-reset:s}
+.step{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px;display:grid;gap:10px;align-content:start;min-width:0}
+.step::before{counter-increment:s;content:counter(s);font-family:Unbounded,sans-serif;font-weight:700;width:38px;height:38px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center}
+
+/* демо */
+.demo .wrap{display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:start}
+.demo .txt{display:grid;gap:16px;min-width:0}
+video{width:100%;max-width:100%;border-radius:var(--radius);border:1px solid var(--line);background:#fff;display:block}
+
+/* пакети */
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:28px}
+.plan{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:24px;display:grid;gap:14px;align-content:start;min-width:0}
+.plan.main{border:2px solid var(--green);position:relative}
+.plan.main .tag{position:absolute;top:-13px;left:22px;background:var(--green);color:#fff;font-size:.75rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:999px}
+.price{font-family:Unbounded,sans-serif;font-weight:700;font-size:1.6rem;color:var(--ink);font-variant-numeric:tabular-nums}
+.price small{display:block;font-family:Manrope,sans-serif;font-weight:600;font-size:.88rem;color:var(--muted);margin-top:4px}
+.plan ul{margin:0;padding-left:20px;display:grid;gap:6px;color:var(--ink-2);font-size:.96rem}
+.pilot{margin-top:24px;background:var(--green-soft);border-radius:var(--radius);padding:20px 24px;display:grid;gap:6px}
+.pilot b{color:#13643b}
+
+/* для кого */
+.who-list{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.who-list span{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:9px 16px;font-weight:600}
+
+/* питання */
+.faq{display:grid;gap:12px;margin-top:24px;max-width:780px}
+details{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 20px}
+summary{font-weight:800;cursor:pointer;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";float:right;font-weight:800;color:var(--muted)}
+details[open] summary::after{content:"–"}
+details p{margin-top:10px}
+
+/* форма */
+.order{background:var(--navy);color:#fff}
+.order .wrap{display:grid;grid-template-columns:.9fr 1.1fr;gap:40px;align-items:start}
+.order h2,.order p{color:#fff}
+.order .txt{display:grid;gap:14px;min-width:0}
+.order .txt p{opacity:.85}
+form,.answer{background:var(--card);color:var(--ink);border-radius:var(--radius);padding:26px;display:grid;gap:14px}
+label{display:grid;gap:6px;font-size:.88rem;font-weight:800}
+input,select,textarea{width:100%;padding:12px 14px;border:1px solid #cfd6de;border-radius:10px;background:#fbfcfd;font:inherit;font-weight:400;color:var(--ink)}
+textarea{min-height:84px;resize:vertical}
+.consent{display:flex;gap:10px;align-items:flex-start;font-weight:600;font-size:.84rem;color:var(--muted)}
+.consent input{width:auto;margin-top:4px}
+.err{color:var(--red);font-size:.9rem;min-height:1.2em}
+.answer{display:none;background:var(--green-soft)}
+.timer{font-family:Unbounded,sans-serif;font-weight:700;font-size:2.4rem;color:var(--green);font-variant-numeric:tabular-nums}
+.answer p{color:var(--ink)}
+footer{padding-block:28px;font-size:.88rem;color:var(--muted)}
+footer .wrap{display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between}
+
+@media (max-width:860px){
+  .hero .wrap,.demo .wrap,.order .wrap{grid-template-columns:1fr}
+  .pain .grid,.steps,.plans{grid-template-columns:1fr}
+  section{padding-block:44px}
+}
+@media (max-width:420px){
+  header .cta-mini{padding:7px 12px;font-size:.82rem}
+  .btn{width:100%;text-align:center}
+  .row{font-size:.84rem;gap:8px}
+  .calllog,.tg{padding:14px}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <a class="logo" href="#"><svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#163a5f"/><path d="M10 8c1 0 2 2 3 4s-1 3-1 3 1 3 5 5c0 0 1-2 3-1s4 2 4 3-2 4-4 4C14 26 6 18 6 12c0-2 3-4 4-4z" fill="#37c47a"/></svg>Слухавка</a>
+    <a class="cta-mini" href="#zayavka">7 днів безкоштовно</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-text">
+      <span class="eyebrow">Для салонів, клінік, СТО і майстрів</span>
+      <h1>Клієнт телефонує, а у вас руки зайняті?</h1>
+      <p class="lead">Слухавка бере трубку, коли ви не можете: питає ім'я, номер і що потрібно, і за кілька секунд пише вам у Telegram. Заявки з сайту отримують відповідь за 1–2 секунди, навіть уночі.</p>
+      <div class="btns">
+        <a class="btn" href="#zayavka">Спробувати 7 днів безкоштовно</a>
+        <span class="note">Без передоплати. Ваш номер лишається.</span>
+      </div>
+    </div>
+    <div class="mock" aria-label="Приклад: пропущений дзвінок перетворюється на повідомлення в Telegram">
+      <div class="calllog">
+        <div class="t">Дзвінки сьогодні</div>
+        <div class="row"><span class="who">↙ <span>+380 67 ••• 12 48</span></span><span class="miss">пропущений · 14:32</span></div>
+        <div class="row"><span class="who">↙ <span>+380 50 ••• 45 67</span></span><span class="ok">Слухавка · 15:10</span></div>
+        <div class="row"><span class="who">↙ <span>+380 93 ••• 80 05</span></span><span class="ok">Слухавка · 15:47</span></div>
+      </div>
+      <div class="arrow">за 5 секунд</div>
+      <div class="tg">
+        <div class="head"><b>Слухавка</b><span>15:11</span></div>
+        <p>📞 <b>Олена</b>, 050 ••• 45 67 — хоче на манікюр завтра після 18:00. Просить передзвонити.</p>
+        <div class="meta">Розмова 0:41 · запис і текст розмови додано</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pain">
+  <div class="wrap">
+    <span class="eyebrow">Чому це важливо</span>
+    <h2 style="margin-top:10px">Клієнт, якому не відповіли, телефонує наступному в списку</h2>
+    <div class="grid">
+      <div><span class="big">×7</span><p>частіше вдається поговорити з клієнтом по суті, якщо відповісти на заявку протягом години, а не пізніше.</p></div>
+      <div><span class="big">42 год</span><p>у середньому компанії відповідали на заявку з сайту. Майже чверть не відповіли зовсім.</p></div>
+      <div><span class="big">1–2 с</span><p>відповідь Слухавки на заявку з сайту. Можете перевірити на цій сторінці, форма внизу.</p></div>
+    </div>
+    <p class="src">Перші дві цифри — дослідження 2 241 компанії в США, Harvard Business Review, 2011: <a href="https://hbr.org/2011/03/the-short-life-of-online-sales-leads" target="_blank" rel="noopener">«The Short Life of Online Sales Leads»</a>.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <span class="eyebrow">Як це працює</span>
+    <h2 style="margin-top:10px">Три кроки, і ви бачите кожного клієнта</h2>
+    <div class="steps">
+      <div class="step"><h3>Ви не встигаєте взяти трубку</h3><p>Через 20 секунд дзвінок переходить до помічника. Ваш номер не змінюється: це звичайна переадресація «якщо не відповідаю».</p></div>
+      <div class="step"><h3>Помічник говорить з клієнтом</h3><p>Ввічливо, українською або російською: питає ім'я, номер і що потрібно. Спам і роботів відсікає сам, на рекламу хвилини не витрачає.</p></div>
+      <div class="step"><h3>Вам приходить повідомлення</h3><p>У Telegram: хто дзвонив, що хотів, кому передзвонити першим. Увечері — короткий список за день.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="demo">
+  <div class="wrap">
+    <div class="txt">
+      <span class="eyebrow">Заявки з сайту</span>
+      <h2>Відповідь клієнту, поки він ще на вашому сайті</h2>
+      <p>Людина залишає заявку, і за секунду бачить відповідь: «Дякуємо, заявку №17 отримали». Вам у Telegram приходить картка з кнопкою «Взяв заявку». Якщо за 5 хвилин ніхто не взяв, Слухавка нагадає.</p>
+      <p>На відео — як це працює на сайті зоомагазину: 27 секунд, без звуку.</p>
+    </div>
+    <video src="demo-zayavka.mp4" poster="demo-poster.jpg" controls muted playsinline preload="none"></video>
+  </div>
+</section>
+
+<section style="padding-top:12px">
+  <div class="wrap">
+    <span class="eyebrow">Ціни</span>
+    <h2 style="margin-top:10px">Платите за налаштування і щомісячний супровід</h2>
+    <div class="plans">
+      <div class="plan">
+        <h3>Швидка відповідь на заявки</h3>
+        <div class="price">3 000 грн<small>налаштування, далі 800 грн/міс</small></div>
+        <ul><li>Форма сайту або Instagram — миттєва відповідь клієнту</li><li>Картка заявки вам у Telegram з кнопкою «Взяв»</li><li>Нагадування, якщо заявку не взяли за 5 хвилин</li><li>Список заявок і час відповіді</li></ul>
+      </div>
+      <div class="plan main">
+        <span class="tag">Найчастіше</span>
+        <h3>Голосовий помічник на дзвінки</h3>
+        <div class="price">4 500 грн<small>налаштування, далі 1 500 грн/міс</small></div>
+        <ul><li>Бере трубку, коли ви не відповідаєте, 24/7</li><li>Записує ім'я, номер і що потрібно</li><li>Відсікає спам і роботів</li><li>Повідомлення в Telegram одразу + вечірній список</li><li>100 хвилин розмов на місяць включено, далі 6 грн/хв</li></ul>
+      </div>
+      <div class="plan">
+        <h3>Разом</h3>
+        <div class="price">6 500 грн<small>налаштування, далі 2 000 грн/міс</small></div>
+        <ul><li>Дзвінки і заявки з сайту в одному Telegram</li><li>Помічник знає ваші ціни, години й адресу та відповідає на прості питання</li><li>Щомісячний звіт: скільки клієнтів прийшло і як швидко їм відповіли</li></ul>
+      </div>
+    </div>
+    <div class="pilot">
+      <b>Перші 7 днів — безкоштовно і без передоплати.</b>
+      <p>Подивіться, скільки дзвінків і заявок помічник прийняв за тиждень, і тоді вирішуйте. Першим трьом клієнтам — налаштування зі знижкою 50% в обмін на чесний відгук.</p>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:12px">
+  <div class="wrap">
+    <span class="eyebrow">Кому підходить</span>
+    <h2 style="margin-top:10px">Там, де руки зайняті клієнтом</h2>
+    <div class="who-list"><span>Стоматології</span><span>Салони краси й манікюр</span><span>Барбершопи</span><span>Подологи й косметологи</span><span>СТО й шиномонтаж</span><span>Ветклініки</span><span>Майстри з ремонту</span><span>Репетитори й студії</span></div>
+  </div>
+</section>
+
+<section style="padding-top:12px">
+  <div class="wrap">
+    <span class="eyebrow">Питання</span>
+    <h2 style="margin-top:10px">Що зазвичай питають</h2>
+    <div class="faq">
+      <details><summary>Мені потрібен новий номер?</summary><p>Ні. Клієнти й далі телефонують на ваш номер. Коли ви не відповідаєте 20 секунд, дзвінок переходить до помічника — це переадресація, яку вмикають у налаштуваннях телефону за 2 хвилини. Вартість переадресації — за тарифом вашого оператора, підкажемо, як перевірити.</p></details>
+      <details><summary>Клієнти зрозуміють, що це не людина?</summary><p>Так, і це чесно: помічник представляється помічником вашого салону чи клініки. Він не обіцяє того, чого ви не дозволили, — лише записує, хто дзвонив і що потрібно, а рішення лишається за вами.</p></details>
+      <details><summary>Що, якщо помічник не зрозуміє клієнта?</summary><p>Вам однаково прийде повідомлення з номером і текстом розмови. Ви просто передзвоните — як зараз, тільки без втраченого клієнта.</p></details>
+      <details><summary>Скільки часу займає запуск?</summary><p>Від 1 до 3 днів. 20 хвилин розмови з вами — дізнатися, що питають клієнти, ваші години й ціни. Далі все налаштовую я, ви лише вмикаєте переадресацію.</p></details>
+      <details><summary>Можна відмовитися?</summary><p>Так, у будь-який момент, без штрафів. Вимикаєте переадресацію — і все працює як раніше.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="order" id="zayavka">
+  <div class="wrap">
+    <div class="txt">
+      <span class="eyebrow" style="color:#a9c2dc">Заявка</span>
+      <h2>Спробуйте на собі</h2>
+      <p>Залиште заявку і подивіться, як швидко прийде відповідь. Так само швидко її отримуватимуть ваші клієнти.</p>
+      <p>Протягом години (з 9:00 до 21:00) напише Дмитро — домовимося про 20-хвилинну розмову і 7 безкоштовних днів.</p>
+    </div>
+    <div>
+      <form id="f" novalidate>
+        <label>Ваше ім'я<input name="name" autocomplete="given-name" placeholder="Олена"></label>
+        <label>Ваш бізнес<input name="biz" placeholder="Салон «Аврора», Позняки"></label>
+        <label>Телефон, @telegram або e-mail<input name="contact" required placeholder="+380 67 123 45 67"></label>
+        <label>Що цікавить?<select name="topic"><option>Голосовий помічник на дзвінки</option><option>Швидка відповідь на заявки</option><option>Разом</option><option>Поки що просто дивлюся</option></select></label>
+        <label>Коментар (необов'язково)<textarea name="comment" placeholder="Скільки дзвінків на день, коли найчастіше не встигаєте…"></textarea></label>
+        <label class="consent"><input type="checkbox" name="consent"><span>Погоджуюсь, щоб зі мною зв'язалися щодо цієї заявки. Дані не передаються третім особам. <a href="privacy.html">Конфіденційність</a></span></label>
+        <button class="btn" id="go" type="submit">Надіслати заявку</button>
+        <div class="err" id="err" role="alert"></div>
+      </form>
+      <div class="answer" id="ans" aria-live="polite">
+        <b>Відповідь прийшла за</b>
+        <div class="timer" id="tm">0,0 с</div>
+        <p id="reply"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Слухавка · Дмитро</span>
+    <a href="privacy.html">Політика конфіденційності</a>
+  </div>
+</footer>
+
+<script>
+const ENDPOINT = 'https://n8n-production-bfdf.up.railway.app/webhook/slukhavka-lead';
+const SRC = (new URLSearchParams(location.search).get('s') || '').replace(/[^\w-]/g, '').slice(0, 20);
+const f = document.getElementById('f'), err = document.getElementById('err'), go = document.getElementById('go');
+f.addEventListener('submit', async e => {
+  e.preventDefault();
+  err.textContent = '';
+  const v = Object.fromEntries(new FormData(f));
+  if (!v.contact.trim()) { err.textContent = 'Вкажіть телефон, @telegram або e-mail'; return; }
+  if (!f.consent.checked) { err.textContent = 'Поставте, будь ласка, позначку згоди'; return; }
+  const question = [v.biz.trim() && 'Бізнес: ' + v.biz.trim(), v.comment.trim(), SRC && 'Джерело: ' + SRC].filter(Boolean).join(' · ');
+  go.disabled = true; go.textContent = 'Надсилаємо…';
+  const t0 = performance.now();
+  try {
+    const r = await fetch(ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: v.name, contact: v.contact, topic: v.topic, question, consent: true }) });
+    const j = await r.json();
+    if (!j.ok) throw new Error(j.error || 'Помилка');
+    document.getElementById('tm').textContent = ((performance.now() - t0) / 1000).toFixed(1).replace('.', ',') + ' с';
+    document.getElementById('reply').textContent = j.reply;
+    document.getElementById('ans').style.display = 'grid';
+    go.textContent = 'Заявку №' + j.n + ' надіслано';
+  } catch (x) {
+    err.textContent = x.message === 'Failed to fetch' ? 'Немає зв’язку з сервером, спробуйте ще раз' : x.message;
+    go.disabled = false; go.textContent = 'Надіслати заявку';
+  }
+});
+</script>
+</body>
+</html>
