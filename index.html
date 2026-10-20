@@ -301,6 +301,9 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-betw
 const ENDPOINT = 'https://n8n-production-bfdf.up.railway.app/webhook/slukhavka-lead';
 const SRC = (new URLSearchParams(location.search).get('s') || '').replace(/[^\w-]/g, '').slice(0, 20);
 const f = document.getElementById('f'), err = document.getElementById('err'), go = document.getElementById('go');
+// Лічильник відвідувань без cookie: лише сторінка, мітка ?s= і сайт, з якого прийшли. Без IP і контактів.
+try { fetch('https://n8n-production-bfdf.up.railway.app/webhook/visit', { method: 'POST', keepalive: true, headers: { 'Content-Type': 'text/plain' },
+  body: JSON.stringify({ site: 'slukhavka', path: location.pathname.replace(/^\/slukhavka/, '') || '/', s: SRC, ref: document.referrer }) }).catch(() => {}); } catch (e) {}
 f.addEventListener('submit', async e => {
   e.preventDefault();
   err.textContent = '';
