@@ -38,6 +38,8 @@ header .wrap{display:flex;align-items:center;gap:12px}
 header .cta-mini{margin-left:auto;font-weight:800;font-size:.9rem;color:var(--navy);text-decoration:none;border:2px solid var(--navy);border-radius:999px;padding:8px 16px;white-space:nowrap}
 
 /* первый экран */
+.live-cover{padding-top:16px}
+.live-cover video{display:block;width:100%;height:auto;aspect-ratio:1280/488;border-radius:var(--radius);background:#0b120f}
 .hero{padding-top:28px}
 .hero .wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:44px;align-items:center}
 .hero-text{display:grid;gap:20px;min-width:0}
@@ -144,10 +146,14 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-betw
 <body>
 <header>
   <div class="wrap">
-    <a class="logo" href="#"><svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#163a5f"/><path d="M10 8c1 0 2 2 3 4s-1 3-1 3 1 3 5 5c0 0 1-2 3-1s4 2 4 3-2 4-4 4C14 26 6 18 6 12c0-2 3-4 4-4z" fill="#37c47a"/></svg>Слухавка</a>
+    <a class="logo" href="#"><img src="logo-ring.gif" alt="" width="34" height="34" style="border-radius:50%">Слухавка</a>
     <a class="cta-mini" href="#zayavka">7 днів безкоштовно</a>
   </div>
 </header>
+
+<section class="live-cover" aria-label="Слухавка: бере слухавку, відсікає спам, відповідь на заявку 1,2 с, звіт у Telegram">
+  <div class="wrap"><video src="live-cover.mp4" poster="live-cover-poster.jpg" autoplay muted loop playsinline></video></div>
+</section>
 
 <section class="hero">
   <div class="wrap">
