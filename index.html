@@ -147,7 +147,8 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-betw
 <header>
   <div class="wrap">
     <a class="logo" href="#"><img src="logo-ring.gif" alt="" width="34" height="34" style="border-radius:50%">Слухавка</a>
-    <a class="cta-mini" href="#zayavka">7 днів безкоштовно</a>
+    <span style="display:flex;gap:8px"><a class="cta-mini" id="tg" href="#" target="_blank" rel="noopener" hidden>Написати в Telegram</a>
+<a class="cta-mini" href="#zayavka">7 днів безкоштовно</a></span>
   </div>
 </header>
 
@@ -309,7 +310,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-betw
 
 <footer>
   <div class="wrap">
-    <span>Слухавка · Виконавець: ФОП Гречищев Дмитро Олександрович</span>
+    <span>Слухавка · Виконавець: ФОП Гречищев Дмитро Олександрович · <a href="mailto:grediahead@gmail.com">grediahead@gmail.com</a></span>
     <a href="privacy.html">Політика конфіденційності</a>
   </div>
 </footer>
@@ -318,14 +319,18 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-betw
 const ENDPOINT = 'https://n8n-production-bfdf.up.railway.app/webhook/slukhavka-lead';
 (function () { const v = document.getElementById('promo'); const narrow = window.matchMedia('(max-width: 700px)').matches;
   v.src = narrow ? 'slukhavka-promo-9x16.mp4?v=2' : 'slukhavka-promo-16x9.mp4?v=2'; v.poster = narrow ? 'promo-poster-9x16.jpg?v=2' : 'promo-poster-16x9.jpg?v=2'; if (narrow) v.classList.add('v'); })();
+// Кнопка Telegram: впишіть нік без @, і кнопка з'явиться в шапці
+const TG = '';
+if (TG) { const t = document.getElementById('tg'); t.href = 'https://t.me/' + TG; t.hidden = false; }
 const SRC = (new URLSearchParams(location.search).get('s') || '').replace(/[^\w-]/g, '').slice(0, 20);
-// Персональне демо: ?s=N показує назву бізнесу з першої хвилі (публічні назви з Google Карт)
+// Персональне демо: ?s=N показує назву бізнесу з хвиль розсилки (публічні назви з Google Карт); 30–89 — Україна, 23.10.2026
 const BIZ = {1:['Стоматологія Laser','k'],2:['Стоматологія Apex ST','k'],3:['Стоматологія Мʼята','k'],4:['Цифрова стоматологія Ноженко','k'],
   5:['«Твій стоматолог»','k'],6:['Стоматологія KIRALEX','k'],7:['AM-MED Clinica','k'],8:['Nails beauty bar','s'],9:['«Yes.Please»','s'],10:['Кафо','s'],
   11:['Салон краси «Бантик»','s'],12:['NovaDeLucci','s'],13:['NUDE nailsbar','s'],14:['Подологічний центр Дарії Кузьменко','k'],
-  15:['СТО MafiaService','a'],16:['СТО Car-Customizing','a'],17:['СТО 66','a'],18:['СТО CarRepair pro','a'],19:['Carwares','a'],20:['СТО ХАДО','a']};
+  15:['СТО MafiaService','a'],16:['СТО Car-Customizing','a'],17:['СТО 66','a'],18:['СТО CarRepair pro','a'],19:['Carwares','a'],20:['СТО ХАДО','a'],
+  30:['Prytula Dental Studio','k'],31:['M-Dental','k'],32:['СТО Premium Avto','a'],33:['Ветклініка Avicena','v'],34:['MonoDent','k'],35:['Implantica Dentistry','k'],36:['Стоматологія DM Clinic','k'],37:['VM Dental Clinic','k'],38:['Стоматологія ЛАОДЕНТ','k'],39:['СТО Перша СТОлиця','a'],40:['Стоматологія Дентіко','k'],41:['ADVANCED стоматологія','k'],42:['DM Dental','k'],43:['Стоматологія Villa Louisa Львів','k'],44:['Стоматологічна клініка Овчара','k'],45:['Стоматологія Гатала','k'],46:['Ветклініка Vet Time','v'],47:['Клініка ветеринарної хірургії лікаря Малишко','v'],48:['Стоматологія Н+','k'],49:['Стоматологія Blanco','k'],50:['СТО Da-Car','a'],51:['Ветмедкомплекс','v'],52:['ВетХелп','v'],53:['RK-dental','k'],54:['Стоматологія Лівадент','k'],55:['Dental Magic Studio','k'],56:['PremiumDent','k'],57:['Стоматологія Nisso','k'],58:['LimeDent Clinic','k'],59:['Dent Hill','k'],60:['DENTALIKA','k'],61:['СитиВет','v'],62:['Стоматологія Еліт-Дента','k'],63:['Центр сучасної стоматології','k'],64:['Стоматологія Біостом','k'],65:['Стоматологія Implant Center','k'],66:['Ветклініка ХарківVet','v'],67:['Стоматологія Студія SMILE','k'],68:['Стоматологія Teeth Lab','k'],69:['Dental Studio','k'],70:['New Dent','k'],71:['Стоматологія Dr. Miller','k'],72:['Dr.Hurtova Estetic Dent','k'],73:['Aliʼs Premium Dental Care','k'],74:['Стоматологія Клініка Medium','k'],75:['EXTRA DENT','k'],76:['SOLTYS Dental Studio','k'],77:['Стоматологія Stay Smile','k'],78:['Yeremchuk Dental','k'],79:['Стоматологія 32EXPERT','k'],80:['Стоматологія Ідеал','k'],81:['Стоматологія Пальміра Дент','k'],82:['Danyliv Dental Clinic','k'],83:['Стоматологія Дентальна хірургія та терапія','k'],84:['Стоматологія СПЕКТР','k'],85:['СТО Avtomotiv Service','a'],86:['СТО Автосервіс Львів (Лапаївка)','a'],87:['СТО N4S Need For Service','a'],88:['Ветклініка Дай лапу','v'],89:['Ветклініка Vet House','v']};
 (function () { const b = BIZ[SRC]; if (!b) return;
-  const H = {k: 'Пацієнт залишив заявку, а адміністратор зайнятий?', s: 'Клієнтка пише на запис, а майстер з клієнтом?', a: 'Клієнт дзвонить, а майстер під машиною?'};
+  const H = {k: 'Пацієнт залишив заявку, а адміністратор зайнятий?', s: 'Клієнтка пише на запис, а майстер з клієнтом?', a: 'Клієнт дзвонить, а майстер під машиною?', v: 'Власник тварини залишив заявку, а лікар на прийомі?'};
   const ey = document.querySelector('.hero .eyebrow'), h1 = document.querySelector('.hero h1'), bz = document.querySelector('#f [name=biz]');
   if (ey) ey.textContent = 'Демо для: ' + b[0]; if (h1) h1.textContent = H[b[1]]; if (bz && !bz.value) bz.value = b[0];
   document.title = 'Слухавка — демо для ' + b[0]; })();
